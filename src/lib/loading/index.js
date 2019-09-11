@@ -6,20 +6,21 @@ export default ()=>{
 
     let vm = new LoadingComponent({
         el:document.createElement("div"),
-        // data:{
-        //     flag:false
-        // },
+        data:{
+            flag:false
+        },
         methods:{
             handleMount(){
-                // this.flag = true
-                document.body.appendChild(vm.$mount().$el);
+                this.flag = true
+                // document.body.appendChild(vm.$mount().$el);
             },
             handleDestory(){
-                //  this.flag = false
-                document.body.removeChild(vm.$mount().$el);
+                 this.flag = false
+                // document.body.removeChild(vm.$mount().$el);
             }
         }
     })
-    // document.body.appendChild(vm.$mount().$el);
+    // 一进来就挂载
+    document.body.appendChild(vm.$mount().$el);
     return vm;
 }

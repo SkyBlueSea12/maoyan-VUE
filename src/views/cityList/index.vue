@@ -1,62 +1,111 @@
 <template>
      
             <div class='city_body'>
+               <happy-BScroll ref="happyscroll">
+                <div>
                 <!-- 热门城市 -->
                 <div class="hot_city">
                     <div class="hot_title">热门城市</div>
-                    <div class="hot_city_list">
-                        <div class='hot_city_name'>北京</div>
-                        <div class='hot_city_name'>北京</div>
-                        <div class='hot_city_name'>北京</div>
-                        <div class='hot_city_name'>北京</div>
-                        <div class='hot_city_name'>北京</div>
-                        
-                    </div>
+                    <div class="hot_city_list" >
+                        <div 
+                        class='hot_city_name' 
+                        v-for="(item,index) in cityHot"
+                         :key="index"
+                        >{{item.cityName}}</div>
+                   </div>
                 </div>
+
                 <!-- 城市列表 -->
-                <div class='city_list'>
-                        <div class="city_list_item">
-                            <div class="city_title_letter">A</div>
-                            <div class="city_list_name">
+                <div class='city_list' ref="list">
+                        <div class="city_list_item" v-for="(item,index) in cityList" :key="index">
+                            <div class="city_title_letter">{{item.index}}</div>
+                              <div class="city_list_name">
+                                <!-- 点击获取城市 -->
+                                  <v-touch class="city_list_name_item"
+                                        v-for="(child,idx) in item.list"
+                                        :key="idx"
+                                        tag="div"
+                                        @tap="handleTo(child)" 
+
+                                        >{{child.cityName}}
+                                  </v-touch>
+                                <!-- <div class='city_list_name_item'>北京</div>
                                 <div class='city_list_name_item'>北京</div>
                                 <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                            </div>
+                                <div class='city_list_name_item'>北京</div> -->
+                              </div>
+                             
                         </div>
-                        <div class="city_list_item">
-                            <div class="city_title_letter">A</div>
-                            <div class="city_list_name">
-                                <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                                <div class='city_list_name_item'>北京</div>
-                            </div>
-                        </div>
+                     
+                      </div>
+                
                 </div>
+
+
                 <!-- 城市列表下标 -->
-                <div class="city_list_index">
-                     <div class="index_item">A</div>
-                     <div class="index_item">B</div>
+                <div class="city_list_index" >
+                     <v-touch 
+                     class="index_item"
+                      @tap="handleIndexTo(index)" 
+                      tag="div"
+                     v-for="(item,index) in cityList" 
+                     :key="index">{{item.index}}</v-touch>
+                     <!-- <div class="index_item">B</div>
                      <div class="index_item">C</div>
                      <div class="index_item">D</div>
-                     <div class="index_item">E</div>
+                     <div class="index_item">E</div> -->
                 </div>
+                  </happy-BScroll> 
             </div>
        
 </template>
 
 <script>
+        import {mapActions,mapState,mapMutations} from "vuex"
         export default{
-            name:"CityList"
+            name:"CityList",
+            created(){
+                if(!sessionStorage.getItem("cityHot") || !sessionStorage.getItem("cityList")){
+                                this.handleGetCityAction();//ajax请求数据
+                }
+               
+            },
+            computed: {
+               ...mapState({
+                   cityHot:state=>state.city.cityHot,
+                   cityList:state=>state.city.cityList
+               }) 
+            },
+            methods: {
+                ...mapActions({
+                    handleGetCityAction:"city/handleGetCityAction"
+                }),
+                handleIndexTo(index){
+                    console.log(index);
+                    let LetterFirst = this.$refs.list.querySelectorAll('.city_title_letter');
+                    // console.log(LetterFirst)
+                    this.$refs.happyscroll.scroll.scrollTo(0,-LetterFirst[index].offsetTop,500);
+                    // this.$refs.happyscroll.scroll.scrollTo(0,LetterFirst[index].offsetTop,500);
+                    // this.$refs.scroll.scrollTop = LetterFirst[index].offsetTop;
+                },
+                handleTo(params){
+                 
+                    this.handleToggleCity(params);
+                    this.$router.push("/movie")
+                },
+                ...mapMutations({
+                    handleToggleCity:"city/handleToggleCity"
+                  
+                })
+            }
         }
 </script>
 
 <style>
     .city_body{
         background:#ebebeb;
+        height:100%;
+        overflow:auto;
     }
     .hot_title,.city_title_letter{
         line-height:.6rem;

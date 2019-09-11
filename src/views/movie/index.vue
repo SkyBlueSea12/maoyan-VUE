@@ -6,7 +6,8 @@
             <div id="content">
                   <router-link class="movie_menu" tag='div' to="/cityList">
                         <div class="movie_menu_city">
-                              <span>北京</span>
+                              <!-- <span>{{this.$store.state.city.cityName}}</span> -->
+                              <span>{{city}}</span>
                               <i class="iconfont">&#xe61e;</i>
                         </div>
                         <ul class="movie_menu_switch">
@@ -18,7 +19,9 @@
                         </router-link>
                   </router-link>
                   <!-- 这一部分会发生变化---做成组件 二级路由 -->
-                  <router-view></router-view>
+                 <keep-alive>
+                        <router-view></router-view>
+                 </keep-alive>
                   <!-- <div class="movie_body">
                               <div class="movie_item">
                                      <div class="movie_item_pic">
@@ -38,9 +41,15 @@
 
 <script>
 
-
+ import {mapState} from "vuex"
 export default {
+     
   name: 'Movie',
+  computed: {
+        ...mapState({
+              city:state=>state.city.cityName
+        })
+  }
 
 }
 </script>
@@ -91,12 +100,12 @@ export default {
             font-size: .3rem;
          
       }
-        #content .movie_menu .movie_menu_switch .movie_menu_active{
+        #content .movie_menu .movie_menu_switch .router-link-active{
               color:#ef4238;
               border-bottom: 2px solid #ef4238;
         }
         #content  .movie_body {
-              height:100%;
+            
               padding-bottom: 1rem;
               padding-left: .2rem;
               padding-right: .2rem;

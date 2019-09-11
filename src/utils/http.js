@@ -10,7 +10,7 @@
     // 请求拦截器
     server.interceptors.request.use(config=>{
         if(config.method.toUpperCase() == 'GET'){
-            config.params = {...config.data}
+            // config.params = {...config.data}
         }else if(config.method.toUpperCase() == 'POST'){
             config.headers['content-type'] = 'application/x-www-from-urlencoded';
             //config.data = qs.stringify(config.data) 根据需求来定

@@ -13,6 +13,7 @@
    swiper
    Token验证
    vue-loader
+   vue-touch 移动端手指事件
 
 
 ### 项目依赖
